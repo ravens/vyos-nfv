@@ -1,5 +1,5 @@
 {
-    "_comment" : "Build with `packer build -var-file=vyos-var.json vyos.img.json`",
+    "_comment" : "Build with `packer build -var-file=vyos-var.json vyos.qcow2.json`",
   "builders": [{
     "type": "qemu",
     "accelerator": "kvm",
