@@ -75,6 +75,7 @@
   "type": "vagrant",
   "compression_level": 1,
   "output": "vyos.box",
+  "keep_input_artifact": true,
   "vagrantfile_template": "./vyos-template.vagrantfile"
   }]  
 }
