@@ -1,0 +1,72 @@
+{
+    "_comment" : "Build with `packer build -var-file=vyos-var.json vyos.img.json`",
+  "builders": [{
+    "type": "qemu",
+    "accelerator": "kvm",
+    "format" : "qcow2",
+    "net_device" : "virtio-net",
+    "iso_url": "{{user `iso_url`}}",
+    "iso_checksum": "{{user `iso_checksum`}}",
+    "iso_checksum_type": "{{user `iso_checksum_type`}}",
+    "output_directory": "build",
+    "vm_name": "vyos-{{isotime}}.img",
+    "disk_size": "{{user `disk_size`}}",
+    "headless": "{{user `headless`}}",
+    "boot_wait": "5s",
+      "boot_command": [
+          "<enter><wait10><wait10>",
+        "vyos<enter><wait>",
+        "vyos<enter><wait>",
+        "install image<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "Yes<enter><wait>",
+        "<enter><wait10>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "{{user `password`}}<enter><wait>",
+        "{{user `password`}}<enter><wait>",
+        "<enter><wait10>",
+        "sudo sed -i 's/reboot -d -f -i/eject -m cdrom\\n\\treboot -d -f -i/' /etc/init.d/reboot<enter><wait>",
+        "reboot<enter><wait>",
+        "Yes<enter><wait10>",
+        "<wait10>",
+        "<wait10>",
+        "<wait10>",
+        "<wait10>",
+        "vyos<enter><wait>",
+        "{{user `password`}}<enter><wait>",
+        "configure<enter><wait>",
+        "delete system console<enter><wait>",
+        "set interface ethernet eth0 address dhcp<enter><wait>",
+        "set system login user {{user `user`}} authentication plaintext-password {{user `password`}}<enter><wait>",
+        "set system login user {{user `user`}} level admin<enter><wait>",
+        "set service ssh<enter><wait>",
+        "commit<enter><wait>",
+        "save<enter><wait>",
+        "exit<enter><wait>",
+        "reboot<enter><wait>",
+        "Yes<enter><wait10>",
+        "<wait10>",
+        "<wait10>",
+        "<wait10>",
+        "<wait10>"
+      ],
+    "ssh_timeout": "{{user `ssh_timeout`}}",
+    "ssh_username": "{{user `user`}}",
+    "ssh_password": "{{user `password`}}",
+    "shutdown_command": "sudo poweroff",
+    "qemuargs": [
+      ["-m", "{{user `memory`}}"],
+      ["-smp", "{{user `cpus`}}"]
+    ]
+  }],
+  "provisioners": [
+    {
+      "type":  "shell",
+      "inline": [
+        "sudo sed -i '/hw-id/d' /config/config.boot"
+        ]
+    }]
+}
