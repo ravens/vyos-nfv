@@ -42,6 +42,8 @@
         "set interface ethernet eth0 address dhcp<enter><wait>",
         "set system login user {{user `user`}} authentication plaintext-password {{user `password`}}<enter><wait>",
         "set system login user {{user `user`}} level admin<enter><wait>",
+        "set system login user {{user `user`}} authentication public-keys identifier key '{{user `sshpubkey`}}'<enter><wait>",
+        "set system login user {{user `user`}} authentication public-keys identifier type ssh-rsa<enter><wait>",
         "set service ssh<enter><wait>",
         "commit<enter><wait>",
         "save<enter><wait>",
@@ -68,5 +70,11 @@
       "inline": [
         "sudo sed -i '/hw-id/d' /config/config.boot"
         ]
-    }]
+    }],
+  "post-processors": [{
+  "type": "vagrant",
+  "compression_level": 1,
+  "output": "vyos.box",
+  "vagrantfile_template": "./vyos-template.vagrantfile"
+  }]  
 }
