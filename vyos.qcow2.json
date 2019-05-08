@@ -70,6 +70,8 @@
       "type":  "shell",
       "inline": [
         "sudo sed -i '/hw-id/d' /config/config.boot",
+        "echo 'deb http://archive.debian.org/debian jessie main contrib non-free' | sudo tee /etc/apt/sources.list.d/debian.list",
+	"apt-get -qy update",
         "echo 'sudo_user: root\nuser: minion' | sudo    tee /etc/salt/minion.d/sudouser.conf"
         ]
     }],
