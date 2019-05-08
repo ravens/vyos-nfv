@@ -9,7 +9,7 @@
     "iso_checksum": "{{user `iso_checksum`}}",
     "iso_checksum_type": "{{user `iso_checksum_type`}}",
     "output_directory": "build",
-    "vm_name": "vyos-{{isotime}}.img",
+    "vm_name": "vyos.img",
     "disk_size": "{{user `disk_size`}}",
     "headless": "{{user `headless`}}",
     "boot_wait": "5s",
@@ -44,6 +44,7 @@
         "set system login user {{user `user`}} level admin<enter><wait>",
         "set system login user {{user `user`}} authentication public-keys identifier key '{{user `sshpubkey`}}'<enter><wait>",
         "set system login user {{user `user`}} authentication public-keys identifier type ssh-rsa<enter><wait>",
+        "set system name-server 8.8.8.8<enter><wait>",
         "set service ssh<enter><wait>",
         "commit<enter><wait10>",
         "save<enter><wait>",
@@ -68,7 +69,8 @@
     {
       "type":  "shell",
       "inline": [
-        "sudo sed -i '/hw-id/d' /config/config.boot"
+        "sudo sed -i '/hw-id/d' /config/config.boot",
+        "echo 'sudo_user: root\nuser: minion' | sudo    tee /etc/salt/minion.d/sudouser.conf"
         ]
     }],
   "post-processors": [{
@@ -77,5 +79,5 @@
   "output": "vyos.box",
   "keep_input_artifact": true,
   "vagrantfile_template": "./vyos-template.vagrantfile"
-  }]  
+}] 
 }
