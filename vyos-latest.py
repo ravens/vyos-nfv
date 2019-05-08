@@ -25,5 +25,4 @@ hash_webpage = requests.get(base_hash_url + iso_url_path).text
 final_url = base_url + iso_url_path
 final_hash = json.loads(hash_webpage)[hash_type]
 
-print final_url
-print final_hash
+print "To build VyOS QCOW image: packer build -var-file=vyos-var.json -var 'iso_url=" + final_url + "' -var 'iso_checksum=" + final_hash + "' vyos.qcow2.json" 
