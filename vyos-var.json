@@ -1,11 +1,10 @@
 {
-    "_comment" : "Build with `packer build -var-file=vyos-var.json vyos.img.json`",
     "cpus": "1",
     "headless" : "true",
     "disk_size" : "65536",
-    "iso_checksum": "2f2d1617dcc7f613121263f9cacba0891d759d61",
+    "iso_checksum": "97228ce68589598da90c50d36e378c70f44839b7",
     "iso_checksum_type" : "sha1",
-    "iso_url" :"https://downloads.vyos.io/testing/1.2.0-rc11/vyos-1.2.0-rc11-amd64.iso",
+    "iso_url" :"https://downloads.vyos.io/rolling/current/amd64/vyos-1.2.0-rolling%2B201905050337-amd64.iso",
     "memory" : "512",
     "user" : "vagrant",
     "password" : "vagrant",
