@@ -4,32 +4,32 @@ Tools to generate a cloud-ready VyOS image
 ## Packer-based QCOW2 image generator
 
 We use a standard Ubuntu LTE (18.04) for this. First some dependencies :
-
 ```
 wget https://releases.hashicorp.com/packer/1.3.3/packer_1.3.3_linux_amd64.zip # we fetch a recent packer from their website 
 unzip packer_1.3.3_linux_amd64.zip && sudo mv packer /usr/local/bin # make the binary available to the system users
 adduser $USER kvm # required for packer to use KVM as normal user
 ```
-Adjust variables in vyos-var.json if necessary.
 
-And then we can generate a new image using packer : 
+Adjust variables in vyos-var.json if necessary, or use the provided python script to generate the latest VyOS rolling release building command : 
 ```
-packer build -var-file=vyos-var.json vyos.qcow2.json
+sudo apt-get install python-bs4
+python vyos-latest.py
+#To build VyOS QCOW image: packer build -var-file=vyos-var.json -var 'iso_url=https://downloads.vyos.io/rolling/current/amd64/vyos-1.2.0-rolling%2B201905081347-amd64.iso' -var 'iso_checksum=58f358a09949ea97e539ce53ed1ac9b55296050d' vyos.qcow2.json
 ```
+
 Output QCOW2 image should be available in the build/ directory :
 ```
 ls build/
-# vyos-2019-01-28T17:15:34Z.img
-```
-
-As well, a vagrant-ready image will be made available in the main directory :
-```
-ls *.box
-# vyos.box
+# vyos.img
 ```
 
 ## Vagrant based box
 
+As well, after calling packer build, a vagrant-ready image will be made available in the main directory :
+```
+ls *.box
+# vyos.box
+```
 Again, some dependencies, as we are building only the image for the libvirt provider. 
 
 We need to install vagrant and the libvirt provider as a plugins. Unfortunately on Ubuntu LTE (18.04) to install the upstream version we need some tweaks to get installed at the time of this document :
@@ -60,4 +60,13 @@ commit
 save
 exit
 ```
+## ssh provisioning
 
+One can use the ssh provision of Vagrant to auto configure the VyOS image on vagrant up:
+```
+/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper begin
+/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service lldp
+/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper commit  
+/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper save  
+/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper end
+```
