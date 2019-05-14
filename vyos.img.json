@@ -142,7 +142,7 @@
   "keep_input_artifact": true,
   "vagrantfile_template": "./vyos-template.vagrantfile",
   "override": {
-    "virtualbox-iso": {
+    "virtualbox": {
       "output": "vyos-virtualbox.box"
     },
     "libvirt": {
