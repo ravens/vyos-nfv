@@ -26,6 +26,7 @@ sudo apt-get install python-bs4 # dependency for the script
 python vyos-latest.py
 ```
 
+The output will be :
 ```
 To build VyOS QCOW image:
 packer build -var-file=vyos-var.json -var 'iso_url=https://downloads.vyos.io/rolling/current/amd64/vyos-1.2.0-rolling%2B201905140337-amd64.iso' -var 'iso_checksum=ab014e46588028a021c9adcfb48a32d94dce7f49' -parallel=false vyos.img.json
