@@ -45,11 +45,6 @@ file build_virtualbox/vyos.ova
 build_virtualbox/vyos.ova: POSIX tar archive
 ```
 
-Then the packer script is post processing those raw images into Vagrant Boxes:
-```
-```
-
-
 ### Vagrant based box
 
 As well, after calling packer build, a vagrant-ready image will be made available in the main directory :
