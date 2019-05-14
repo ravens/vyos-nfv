@@ -7,7 +7,7 @@
     "iso_url": "{{user `iso_url`}}",
     "iso_checksum": "{{user `iso_checksum`}}",
     "iso_checksum_type": "{{user `iso_checksum_type`}}",
-    "output_directory": "build",
+    "output_directory": "build_qemu",
     "vm_name": "vyos.img",
     "disk_size": "{{user `disk_size`}}",
     "headless": "{{user `headless`}}",
@@ -71,7 +71,7 @@
     "iso_url": "{{user `iso_url`}}",
     "iso_checksum": "{{user `iso_checksum`}}",
     "iso_checksum_type": "{{user `iso_checksum_type`}}",
-    "output_directory": "build",
+    "output_directory": "build_virtualbox",
     "vm_name": "vyos",
     "cpus" :  "{{user `cpus`}}",
     "disk_size": "{{user `disk_size`}}",
@@ -140,6 +140,14 @@
   "compression_level": 1,
   "output": "vyos.box",
   "keep_input_artifact": true,
-  "vagrantfile_template": "./vyos-template.vagrantfile"
+  "vagrantfile_template": "./vyos-template.vagrantfile",
+  "override": {
+    "virtualbox-iso": {
+      "output": "vyos-virtualbox.box"
+    },
+    "libvirt": {
+      "output": "vyos-libvirt.box"
+    }
+  }
 }] 
 }
