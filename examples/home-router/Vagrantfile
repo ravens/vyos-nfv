@@ -11,42 +11,41 @@ Vagrant.configure("2") do |config|
     sdwan.vm.network "public_network", ip: "192.168.1.1", bridge: "enp4s0", dev: "enp4s0" 
 
     sdwan.vm.provision "shell", inline: <<-SHELL
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper begin
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set interfaces ethernet eth1 address 192.168.1.1/24
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dns forwarding listen-on eth1
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dns forwarding name-server 8.8.8.8
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dns forwarding name-server 8.8.4.4
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dhcp-server shared-network-name LAN authoritative
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 default-router 192.168.1.1
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 dns-server 192.168.1.1
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 lease 3600
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 range 0 start 192.168.1.100
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 range 0 stop 192.168.1.200
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set nat source rule 100 outbound-interface eth0
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set nat source rule 100 translation address masquerade
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_IN default-action drop
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_IN rule 10 action accept
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_IN rule 10 state established enable
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_IN rule 10 state related enable
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_IN rule 20 action drop
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_IN rule 20 state invalid enable
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL default-action drop
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 10 action accept
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 10 state established enable
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 10 state related enable
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 20 action drop
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 20 state invalid enable
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 30 action accept
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 30 protocol icmp
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 40 action accept
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 40 protocol tcp
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set firewall name WAN_LOCAL rule 40 destination port 22
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set interfaces ethernet eth0 firewall in name WAN_IN
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set interfaces ethernet eth0 firewall local name WAN_LOCAL
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper commit  
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper save  
-      /opt/vyatta/sbin/vyatta-cfg-cmd-wrapper end
-      chgrp -R vyattacfg /opt/vyatta/config/active/ # fixing permission in the active config
+      source /opt/vyatta/etc/functions/script-template
+       set interfaces ethernet eth1 address 192.168.1.1/24
+       set service dns forwarding listen-on eth1
+       set service dns forwarding name-server 8.8.8.8
+       set service dns forwarding name-server 8.8.4.4
+       set service dhcp-server shared-network-name LAN authoritative
+       set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 default-router 192.168.1.1
+       set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 dns-server 192.168.1.1
+       set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 lease 3600
+       set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 range 0 start 192.168.1.100
+       set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 range 0 stop 192.168.1.200
+       set nat source rule 100 outbound-interface eth0
+       set nat source rule 100 translation address masquerade
+       set firewall name WAN_IN default-action drop
+       set firewall name WAN_IN rule 10 action accept
+       set firewall name WAN_IN rule 10 state established enable
+       set firewall name WAN_IN rule 10 state related enable
+       set firewall name WAN_IN rule 20 action drop
+       set firewall name WAN_IN rule 20 state invalid enable
+       set firewall name WAN_LOCAL default-action drop
+       set firewall name WAN_LOCAL rule 10 action accept
+       set firewall name WAN_LOCAL rule 10 state established enable
+       set firewall name WAN_LOCAL rule 10 state related enable
+       set firewall name WAN_LOCAL rule 20 action drop
+       set firewall name WAN_LOCAL rule 20 state invalid enable
+       set firewall name WAN_LOCAL rule 30 action accept
+       set firewall name WAN_LOCAL rule 30 protocol icmp
+       set firewall name WAN_LOCAL rule 40 action accept
+       set firewall name WAN_LOCAL rule 40 protocol tcp
+       set firewall name WAN_LOCAL rule 40 destination port 22
+       set interfaces ethernet eth0 firewall in name WAN_IN
+       set interfaces ethernet eth0 firewall local name WAN_LOCAL
+       commit  
+       save  
+       chgrp -R vyattacfg /opt/vyatta/config/active/
     SHELL
 
   end
