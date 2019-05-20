@@ -1,0 +1,18 @@
+version: '3'
+
+networks:
+  vyos:
+
+services:
+  vyos-vm:
+    build: ./
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+      - /dev/kvm
+    volumes:
+      - "./docker_run.sh:/root/run.sh"
+    networks:
+      vyos:
