@@ -6,19 +6,7 @@ Packer, Vagrant scripts to transform VyOS rolling release into a ready to use im
 
 ### prerequisites
 
-We use a standard Ubuntu LTE (18.04) for this. First some dependencies :
-```
-wget https://releases.hashicorp.com/packer/1.4.0/packer_1.4.0_linux_amd64.zip # we fetch a recent packer from their website 
-unzip packer_1.4.0_linux_amd64.zip && sudo mv packer /usr/local/bin # make the binary available to the system users
-adduser $USER kvm # required for packer to use KVM as normal user, as we use the KVM accelerator
-```
-
-### variables
-
-We have put most of the interesting variables into:
-```
-cat vyos-var.json
-```
+For building everything : a linux host with VM support with packer, virtualbox and QEMU/libvirt installed.
 
 ### rolling release aspects
 
@@ -28,13 +16,7 @@ sudo apt-get install python-bs4 # dependency for the script
 python vyos-latest.py
 ```
 
-The output will be :
-```
-To build VyOS QCOW image:
-packer build -var-file=vyos-var.json -var 'iso_url=https://downloads.vyos.io/rolling/current/amd64/vyos-1.2.0-rolling%2B201905140337-amd64.iso' -var 'iso_checksum=ab014e46588028a021c9adcfb48a32d94dce7f49' -parallel=false vyos.img.json
-```
-
-By executing packer, we will generate images for Virtualbox, QEMU and the corresponding Vagrant images. 
+It will automatically run the correponsing packer command by overriding the latest URL and hash values. 
 
 ### outputs
 
@@ -63,6 +45,19 @@ Those boxes can be added to be ready to use with Vagrant:
 vagrant box add vyos-libvirt.box --name vyos --force
 vagrant box add vyos-virtualbox.box --name vyos --force
 ```
+
+### Docker image
+
+For various reason it might be interesting to run VyOS via QEMU running in a container. In that case adapt the docker-compose and the docker_run.sh script to the use case.
+
+By default, I am doing a small NAT with the default docker container network so that the VyOS SSH prompt is accessible.
+
+```
+docker-compose build --no-cache
+docker-compose up -d
+ssh localhost -l vagrant -p 2222 # SSH access on eth0
+```
+
 
 ## Building a router in a couple of lines of Vagrantfile
 
@@ -96,11 +91,10 @@ I am providing some ready to use examples such as :
 
 One can use the ssh provision of Vagrant to auto configure the VyOS image on vagrant up:
 ```
-/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper begin
-/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper set service lldp
-/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper commit  
-/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper save  
-/opt/vyatta/sbin/vyatta-cfg-cmd-wrapper end
+source /opt/vyatta/etc/functions/script-template
+set service lldp
+commit  
+save  
 chgrp -R vyattacfg /opt/vyatta/config/active/ # fixing permission in the active config
 ```
 
