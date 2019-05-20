@@ -28,5 +28,5 @@ final_hash = json.loads(hash_webpage)[hash_type]
 
 CMDLINE="packer build -var-file=vyos-var.json -var 'iso_url=" + final_url + "' -var 'iso_checksum=" + final_hash + "' -parallel=false vyos.img.json"
 
-print "To build VyOS QCOW image: " + CMDLINE
+print "Using following command line to build packer images: " + CMDLINE
 os.system(CMDLINE)    
