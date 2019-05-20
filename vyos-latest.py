@@ -4,6 +4,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+import os
 
 base_url = "https://downloads.vyos.io/" 
 iso_url = base_url + "?dir=rolling/current/amd64"
@@ -25,4 +26,7 @@ hash_webpage = requests.get(base_hash_url + iso_url_path).text
 final_url = base_url + iso_url_path
 final_hash = json.loads(hash_webpage)[hash_type]
 
-print "To build VyOS QCOW image:\npacker build -var-file=vyos-var.json -var 'iso_url=" + final_url + "' -var 'iso_checksum=" + final_hash + "' -parallel=false vyos.img.json" 
+CMDLINE="packer build -var-file=vyos-var.json -var 'iso_url=" + final_url + "' -var 'iso_checksum=" + final_hash + "' -parallel=false vyos.img.json"
+
+print "To build VyOS QCOW image: " + CMDLINE
+os.system(CMDLINE)    
