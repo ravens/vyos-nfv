@@ -12,6 +12,8 @@ services:
     devices:
       - /dev/net/tun
       - /dev/kvm
+    ports:
+      - "1234:1234"
     volumes:
       - "./docker_run.sh:/root/run.sh"
     networks:

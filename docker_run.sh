@@ -6,7 +6,7 @@
 # recover current IPv4
 IPV4=`ip -4 addr show dev eth0 | grep inet | tr -s " " | cut -d" " -f3 | head -n 1`
 
-echo "IPv4 detected : $IPV4"
+echo "IPv4 assigned by Docker : $IPV4"
 
 # create a br0 bridge
 ip link add name br0 type bridge
@@ -29,8 +29,5 @@ ip link set dev eth0 up
 
 ip addr add ${IPV4} dev br0
 
-echo "New network configuration: "
-ip a
-
 # launch QEMU
-/usr/bin/qemu-system-x86_64 -nographic -serial mon:stdio -device virtio-net,netdev=network0,mac=52:55:00:d1:55:01 -netdev tap,id=network0,ifname=tap0,script=no,downscript=no -m 512 -smp 1 -machine type=pc,accel=kvm -drive file=/root/vyos.img,if=virtio,cache=writeback,discard=ignore,format=qcow2 -boot once=d
+/usr/bin/qemu-system-x86_64 -serial telnet:0.0.0.0:1234,server,nowait -device virtio-net,netdev=network0,mac=52:55:00:d1:55:01 -netdev tap,id=network0,ifname=tap0,script=no,downscript=no -m 512 -smp 1 -machine type=pc,accel=kvm -drive file=/root/vyos.img,if=virtio,cache=writeback,discard=ignore,format=qcow2 -boot once=d
