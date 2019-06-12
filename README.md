@@ -85,7 +85,7 @@ vagrant ssh # to login in the final machine
 ## examples
 
 I am providing some ready to use examples such as :
-* (examples/home-router/Vagrantfile) scenario : this will launch enable a computer with 2 interfaces to act as a home router with NAT, DNS, DHCP and firewall
+* [examples/home-router/Vagrantfile](examples/home-router/Vagrantfile) scenario : this will launch enable a computer with 2 interfaces to act as a home router with NAT, DNS, DHCP and firewall
 
 ## ssh provisioning
 
