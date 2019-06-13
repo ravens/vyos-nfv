@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "generic/ubuntu1804"
+  config.vm.box = "ubuntu/bionic64"
 
   config.vm.provision "shell", inline: <<-SHELL
      apt-get update
@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
      docker build -t vyos-builder docker
      docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./configure
      docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder sudo make iso
+     cp /home/vagrant/vyos-build/build/live-image-amd64.hybrid.iso /vagrant/live-image-amd64.hybrid.iso
   SHELL
 
 end
