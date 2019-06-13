@@ -9,7 +9,6 @@ Vagrant.configure("2") do |config|
      apt-get install -y docker.io git
      git clone https://github.com/vyos/vyos-build.git /home/vagrant/vyos-build
      cd /home/vagrant/vyos-build
-     git checkout crux
      chown -R vagrant:vagrant /home/vagrant/vyos-build
      docker build -t vyos-builder docker
      docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./configure
