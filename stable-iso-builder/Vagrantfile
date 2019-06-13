@@ -12,8 +12,8 @@ Vagrant.configure("2") do |config|
      git checkout crux
      chown -R vagrant:vagrant /home/vagrant/vyos-build
      docker build -t vyos-builder docker
-     docker run --rm -it --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./configure
-     docker run --rm -it --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder sudo make iso
+     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./configure
+     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder sudo make iso
   SHELL
 
 end
