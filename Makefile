@@ -1,3 +1,5 @@
+all: packer
+
 clean:
 	rm -Rf build_qemu build_virtualbox *.box
 
