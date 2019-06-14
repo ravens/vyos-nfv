@@ -14,8 +14,8 @@ Vagrant.configure("2") do |config|
      #git submodule update --init --recursive --remote
      #chown -R vagrant:vagrant /home/vagrant/vyos-build
      docker build -t vyos-builder docker
-     #docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./scripts/build-submodules --verbose
-     #sed -i '/vyos_repo_entry/d' scripts/live-build-config
+     #docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./scripts/build-submodules --verbose --init-packages
+     #sed -i '/vyos_repo_entry/d' /home/vagrant/vyos-build/scripts/live-build-config
      docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./configure --build-by="yan@grunenberger.net"  --architecture amd64 --build-type release --version 1.2.0
      docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder sudo make iso
   SHELL
