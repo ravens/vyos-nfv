@@ -4,6 +4,12 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "generic/ubuntu1804"
 
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 4
+    libvirt.memory = 4096
+  end
+
+
   config.vm.provision "shell", inline: <<-SHELL
      sed -i 's/us\./es\./g' /etc/apt/sources.list
      apt-get update
@@ -11,13 +17,16 @@ Vagrant.configure("2") do |config|
      git clone https://github.com/vyos/vyos-build.git /home/vagrant/vyos-build
      cd /home/vagrant/vyos-build
      git checkout crux
-     #git submodule update --init --recursive --remote
-     #chown -R vagrant:vagrant /home/vagrant/vyos-build
+     # (YG) patch to fix broken FRR, missing deps in the docker environment
+     wget https://gist.githubusercontent.com/ravens/36f27cf4a9861cc80808282eea64b04a/raw/16370599d228ad1ce7540706bb8aec5cd694126a/vyos-build-crux.patch
+     patch -p1 < vyos-build-crux.patch
+     # (YG) end patch 
      docker build -t vyos-builder docker
-     #docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./scripts/build-submodules --verbose --init-packages
-     #sed -i '/vyos_repo_entry/d' /home/vagrant/vyos-build/scripts/live-build-config
-     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder ./configure --build-by="yan@grunenberger.net"  --architecture amd64 --build-type release --version 1.2.0
-     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos -w /vyos vyos-builder sudo make iso
+     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos --sysctl net.ipv6.conf.lo.disable_ipv6=0 -w /vyos vyos-builder git submodule update --init --recursive --remote
+     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos --sysctl net.ipv6.conf.lo.disable_ipv6=0 -w /vyos vyos-builder ./scripts/build-submodules --verbose 
+     sed -i '/vyos_repo_entry/d' /home/vagrant/vyos-build/scripts/live-build-config
+     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos --sysctl net.ipv6.conf.lo.disable_ipv6=0 -w /vyos vyos-builder ./configure --build-by="yan@grunenberger.net"  --architecture amd64 --build-type release --version 1.2.0 --debian-mirror="http://ftp.es.debian.org/debian/"
+     docker run --rm --privileged -v /home/vagrant/vyos-build:/vyos --sysctl net.ipv6.conf.lo.disable_ipv6=0 -w /vyos vyos-builder sudo make iso
   SHELL
 
 end
