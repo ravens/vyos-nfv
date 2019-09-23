@@ -1,0 +1,24 @@
+version: '3'
+
+networks:
+  vyos_mgmt:
+
+services:
+  vyos:
+    build: ./ 
+    privileged: true
+    container_name: vyos
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - "/lib/modules:/lib/modules:ro" 
+      - "./config:/config.init"
+    entrypoint:
+      - /sbin/init 
+    networks:
+      vyos_mgmt:
