@@ -1,0 +1,9 @@
+---
+- hosts: all
+  remote_user: vagrant
+  connection: network_cli
+  tasks:
+    - name: activating LLDP service
+      vyos_config:
+        lines:
+          - set service lldp
