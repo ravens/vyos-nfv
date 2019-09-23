@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  vyos-downloader:
+    build: ./
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - ./output:/root/output
+      - ./download:/root/download
+      - ./download_iso.sh:/root/download_iso.sh
